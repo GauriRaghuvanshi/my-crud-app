@@ -1,4 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { fetchPosts, addPost, updatePost, deletePost } from "../utils/api";
 
 export const usePosts = () => useQuery("posts", fetchPosts);
