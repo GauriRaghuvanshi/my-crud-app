@@ -22,7 +22,8 @@ export const fetchPosts = async () => {
   };
   
   export const deletePost = async (id) => {
-    await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
       method: "DELETE",
     });
+    return res.json(); 
   };

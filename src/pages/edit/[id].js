@@ -9,9 +9,12 @@ const EditPost = () => {
   const { id } = router.query;
   const { data: posts, isLoading } = usePosts();
   const updatePost = useUpdatePost();
-  const post = posts?.find((p) => p.id == id);
 
-  if (isLoading || !post) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (!posts) return <p className="text-center">Post not found</p>;
+
+  const post = posts.find((p) => p.id == id);
+  if (!post) return <p className="text-center">Post not found</p>;
 
   return (
     <Layout>
