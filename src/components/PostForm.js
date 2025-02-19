@@ -1,40 +1,59 @@
-import { useCreatePost } from "../hooks/usePosts";
-import Layout from "../components/Layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { TextField, Button, Box, Typography } from "@mui/material";
 
-const Create = () => {
-  const createPost = useCreatePost();
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+const PostForm = ({ onSubmit, defaultValues = {} }) => {
+  const [formData, setFormData] = useState({
+    title: defaultValues.title || "",
+    body: defaultValues.body || "",
+  });
+
+  useEffect(() => {
+    setFormData({
+      title: defaultValues.title || "",
+      body: defaultValues.body || "",
+    });
+  }, [defaultValues]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createPost.mutate({ title, body, userId: 1 });
-    setTitle("");
-    setBody("");
+    if (!formData.title || !formData.body) return;
+    onSubmit(formData);
   };
 
   return (
-    <Layout>
-      <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
-            className="input input-bordered w-full"
-          />
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Body"
-            className="textarea textarea-bordered w-full"
-          ></textarea>
-          <button type="submit" className="btn btn-success w-full">Add Post</button>
-        </form>
-      </div>
-    </Layout>
+    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 500, mx: "auto", mt: 4 }}>
+      <Typography variant="h5" gutterBottom>
+        {defaultValues.id ? "Edit Post" : "Create Post"}
+      </Typography>
+      <TextField
+        fullWidth
+        label="Title"
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        margin="normal"
+        required
+      />
+      <TextField
+        fullWidth
+        label="Body"
+        name="body"
+        value={formData.body}
+        onChange={handleChange}
+        margin="normal"
+        required
+        multiline
+        rows={4}
+      />
+      <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+        {defaultValues.id ? "Update Post" : "Submit"}
+      </Button>
+    </Box>
   );
 };
-export default Create;
+
+export default PostForm;
