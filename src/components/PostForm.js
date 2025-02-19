@@ -1,13 +1,40 @@
-import { useForm } from "react-hook-form";
+import { useCreatePost } from "../hooks/usePosts";
+import Layout from "../components/Layout";
+import { useState } from "react";
 
-const PostForm = ({ onSubmit, defaultValues }) => {
-  const { register, handleSubmit } = useForm({ defaultValues });
+const Create = () => {
+  const createPost = useCreatePost();
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createPost.mutate({ title, body, userId: 1 });
+    setTitle("");
+    setBody("");
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="card bg-base-100 p-4">
-      <input {...register("title")} className="input input-bordered w-full mb-2" placeholder="Title" />
-      <textarea {...register("body")} className="textarea textarea-bordered w-full mb-2" placeholder="Body"></textarea>
-      <button className="btn btn-success">Submit</button>
-    </form>
+    <Layout>
+      <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+            className="input input-bordered w-full"
+          />
+          <textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Body"
+            className="textarea textarea-bordered w-full"
+          ></textarea>
+          <button type="submit" className="btn btn-success w-full">Add Post</button>
+        </form>
+      </div>
+    </Layout>
   );
 };
-export default PostForm;
+export default Create;
